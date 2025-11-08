@@ -9,12 +9,28 @@
  */
 public class Main {
     public static void main(String[] args) {
-        AFD af = new AFD();
-        System.out.println(af.insertTransicion("q0", "0", "q1")); // true
-        System.out.println(af.insertTransicion("q0", "0", "q2")); // true
-        System.out.println(af.insertTransicion("q0", "0", "q1")); // false
-        System.out.println(af.insertTransicion("q1", "1", "q1")); // true
+        AFND afnd = new AFND();
+        afnd.addLetra("a");
+        afnd.addLetra("b");
+        System.out.println(afnd.insertTransicion("X", "a", "Y")); 
+        System.out.println(afnd.insertTransicion("X", "b", "Z")); 
+        System.out.println(afnd.insertTransicion("Y", "a", "W")); 
+        System.out.println(afnd.insertTransicion("Y", "b", "P")); 
+        System.out.println(afnd.insertTransicion("Z", "a", "Y")); 
+        System.out.println(afnd.insertTransicion("Z", "a", "P")); 
+        System.out.println(afnd.insertTransicion("Z", "b", "Y")); 
+        System.out.println(afnd.insertTransicion("W", "a", "Y")); 
+        System.out.println(afnd.insertTransicion("W", "b", "W")); 
+        System.out.println(afnd.insertTransicion("P", "a", "W")); 
+        System.out.println(afnd.insertTransicion("P", "b", "P")); 
+        afnd.setEstadoInicial("X");
+        afnd.setEstadoTerminal("W", true);
+        
+        AFD afd = afnd.conversionAFD();
+        
         System.out.println();
-        System.out.println(af);
+        System.out.println(afnd);
+        System.out.println("--------------------------------------");
+        System.out.println(afd);
     }
 }

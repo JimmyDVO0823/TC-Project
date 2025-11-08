@@ -14,10 +14,12 @@ import java.util.TreeMap;
  */
 public class Transicion {
     private String estado;
+    private boolean terminal;
     private Map<String, ArrayList<String>> transiciones = new TreeMap<>();
 
     Transicion(String estadoInicial) {
         this.estado = estadoInicial;
+        this.terminal = false;
     }
     
     public boolean addTransicion(String letra, String estadoFinal, boolean determinista) {
@@ -41,6 +43,10 @@ public class Transicion {
         
         return false;
         
+    }
+    
+    public void setTerminal(boolean b){
+        this.terminal = b;
     }
 
     public String getEstado() {
