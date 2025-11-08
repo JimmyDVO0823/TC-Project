@@ -1,7 +1,10 @@
 package Conversion;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -38,8 +41,8 @@ public class Vista extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         cbxAFND = new javax.swing.JComboBox<>();
         scroll1 = new javax.swing.JScrollPane();
-        tblANFD = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
+        tblAFND = new javax.swing.JTable();
+        lblAccion = new javax.swing.JLabel();
         txtInsertarTexto = new javax.swing.JTextField();
         btnAccion = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
@@ -58,7 +61,7 @@ public class Vista extends javax.swing.JFrame {
 
         cbxAFND.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        tblANFD.setModel(new javax.swing.table.DefaultTableModel(
+        tblAFND.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -69,10 +72,10 @@ public class Vista extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tblANFD.setMinimumSize(new java.awt.Dimension(300, 80));
-        scroll1.setViewportView(tblANFD);
+        tblAFND.setMinimumSize(new java.awt.Dimension(300, 80));
+        scroll1.setViewportView(tblAFND);
 
-        jLabel3.setText("Agregar Estado:");
+        lblAccion.setText("Agregar Estado:");
 
         txtInsertarTexto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,6 +84,11 @@ public class Vista extends javax.swing.JFrame {
         });
 
         btnAccion.setText(">");
+        btnAccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccionActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -112,7 +120,7 @@ public class Vista extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -120,9 +128,9 @@ public class Vista extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbxAFND, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(72, 72, 72)
-                                .addComponent(jLabel3)
+                                .addComponent(cbxAFND, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(lblAccion)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtInsertarTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -134,12 +142,12 @@ public class Vista extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(scroll2, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
                         .addComponent(scroll1)))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addGap(40, 40, 40))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(235, 235, 235)
                     .addComponent(jLabel2)
-                    .addContainerGap(254, Short.MAX_VALUE)))
+                    .addContainerGap(262, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,7 +156,7 @@ public class Vista extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(cbxAFND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
+                    .addComponent(lblAccion)
                     .addComponent(txtInsertarTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAccion)
                     .addComponent(btnGuardar)
@@ -178,9 +186,40 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    public JTable getTblANFD() {
-        return tblANFD;
+    private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
+       c.realizarAccion();
+    }//GEN-LAST:event_btnAccionActionPerformed
+    
+    
+    public JButton getBtnAccion() {
+        return btnAccion;
     }
+
+    public JButton getBtnConvertir() {
+        return btnConvertir;
+    }
+
+    public JButton getBtnGuardar() {
+        return btnGuardar;
+    }
+
+    public JTable getTblAFD() {
+        return tblAFD;
+    }
+
+    public JTextField getTxtInsertarTexto() {
+        return txtInsertarTexto;
+    }
+    
+    public JTable getTblAFND() {
+        return tblAFND;
+    }
+
+    public JLabel getLblAccion() {
+        return lblAccion;
+    }
+    
+    
 
     public JComboBox<String> getCbxAFND() {
         return cbxAFND;
@@ -234,12 +273,12 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxAFND;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblAccion;
     private javax.swing.JScrollPane scroll1;
     private javax.swing.JScrollPane scroll2;
     private javax.swing.JTable tblAFD;
-    private javax.swing.JTable tblANFD;
+    private javax.swing.JTable tblAFND;
     private javax.swing.JTextField txtInsertarTexto;
     // End of variables declaration//GEN-END:variables
 }

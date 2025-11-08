@@ -39,12 +39,12 @@ public class Controlador {
             }
         };
         // Asignar modelo a la tabla de la vista
-        vista.getTblANFD().setModel(modelo);
+        vista.getTblAFND().setModel(modelo);
         // Ajustes visuales opcionales
-        vista.getTblANFD().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        vista.getTblAFND().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        String[] opciones = {"Añadir estado", "Eliminar estado",
-            "Añadir letra", "Eliminar letra"};
+        String[] opciones = {"Agregar estado", "Eliminar estado",
+            "Agregar letra", "Eliminar letra"};
 
         // modelo y asignación al combo
         DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>(opciones);
@@ -92,20 +92,22 @@ public class Controlador {
         return true;
     }
 
-    /**
-     * Elimina la fila (estado) indicada.
-     *
-     * @param rowIndex índice de fila (0-based)
-     * @return true si se eliminó correctamente
-     */
-    public boolean deleteEstado(int rowIndex) {
-        if (rowIndex < 0 || rowIndex >= modelo.getRowCount()) {
-            return false;
+    public boolean deleteEstado(String nombreEstado) {
+        // buscar fila por el valor en la columna 0
+        boolean deleteExitoso = false;
+        int filas = modelo.getRowCount();
+        int filaEncontrada = -1;
+        for (int r = 0; r < filas; r++) {
+            Object val = modelo.getValueAt(r, 0);
+            if (val != null && nombreEstado.equals(val.toString())) {
+                filaEncontrada = r;
+                deleteExitoso = true;
+                break;
+            }
         }
-        String nombreEstado = String.valueOf(modelo.getValueAt(rowIndex, 0));
-        modelo.removeRow(rowIndex);
-        // Si quieres sincronizar con AFND: eliminar estado del mapa transiciones.
-        // ej: afnd.getTransiciones().remove(nombreEstado);
+        modelo.removeRow(filaEncontrada);
+        vista.getTblAFND().setModel(modelo); // actualizar la tabla
+        vista.getTxtInsertarTexto().setText("");  // limpiar textField
         return true;
     }
 
@@ -140,53 +142,44 @@ public class Controlador {
         return true;
     }
 
-    /**
-     * Elimina la columna en colIndex (no existe removeColumn en
-     * DefaultTableModel). Se reconstruye un nuevo modelo sin esa columna y se
-     * copia la data.
-     *
-     * @param colIndex índice de columna a eliminar
-     * @return true si se eliminó; false si índice inválido o si intentan
-     * eliminar la columna "Estado" (índice 0)
-     */
-    public boolean deleteLetra(int colIndex) {
+ 
+    public boolean deleteLetra(String nombreLetra) {
+        // buscar índice de la columna por nombre
+        int colIndex = modelo.findColumn(nombreLetra);
         if (colIndex <= 0) {
-            // Evitamos eliminar la columna "Estado" (índice 0). Cambia si quieres permitirlo.
-            return false;
+            return false;         // columna no encontrada / no eliminar la col inicial
         }
-        if (colIndex >= modelo.getColumnCount()) {
-            return false;
-        }
-
         int oldCols = modelo.getColumnCount();
         int rows = modelo.getRowCount();
 
-        // construir nuevos nombres de columnas
-        Vector<String> newCols = new Vector<>(oldCols - 1);
-        for (int c = 0; c < oldCols; c++) {
-            if (c == colIndex) {
-                continue;
-            }
-            newCols.add(modelo.getColumnName(c));
-        }
-
-        // construir nuevo modelo y copiar datos (excluyendo la columna removida)
-        DefaultTableModel nuevoModelo = new DefaultTableModel(newCols, 0);
+        String[] newCols = obtenerNombreColumnas(colIndex, oldCols);
+                DefaultTableModel nuevoModelo = new DefaultTableModel(newCols, 0);
         for (int r = 0; r < rows; r++) {
-            Vector<Object> nuevaFila = new Vector<>(oldCols - 1);
+            String[] nuevaFila = new String[oldCols-1];
             for (int c = 0; c < oldCols; c++) {
                 if (c == colIndex) {
                     continue;
                 }
-                nuevaFila.add(modelo.getValueAt(r, c));
+                nuevaFila[c] = (String) modelo.getValueAt(r, c);
             }
             nuevoModelo.addRow(nuevaFila);
         }
-
-        // asignar el nuevo modelo a la tabla y reemplazar la referencia
         modelo = nuevoModelo;
-        vista.getTblANFD().setModel(modelo);
+        vista.getTblAFND().setModel(modelo); // asigna nuevo modelo
+        vista.getTxtInsertarTexto().setText(""); // limpiar
+
         return true;
+    }
+    
+    public String[] obtenerNombreColumnas(int excluir, int size){
+        String[] newCols = new String[size-1]; // Excluir una fila
+        for (int c = 0; c < size; c++) {
+            if (c == excluir) {
+                continue; // Evitar fila
+            }
+            newCols[c] = (modelo.getColumnName(c));
+        }
+        return newCols;
     }
 
     /* ---------------------
@@ -195,9 +188,32 @@ public class Controlador {
     public DefaultTableModel getModelo() {
         return modelo;
     }
-    
-    public void manejarOpcion(String metodo){
-        
+
+    public void manejarOpcion(String metodo) {
+        vista.getLblAccion().setText(metodo);
+        vista.getTxtInsertarTexto().setText("");
+
+    }
+
+    public boolean realizarAccion() {
+        String opcion = (String) vista.getCbxAFND().getSelectedItem();
+        if (opcion == null) {
+            return false;
+        }
+        String texto = vista.getTxtInsertarTexto().getText().trim();
+        if (opcion.equals("Agregar estado")) {
+            addEstado(texto);
+        } else if (opcion.equals("Eliminar estado")) {
+            deleteEstado(texto);
+        } else if (opcion.equals("Agregar letra")) {
+            addLetra(texto);
+        } else if (opcion.equals("Eliminar letra")) {
+            deleteLetra(texto);
+        } else {
+            return false;
+        }
+
+        return true;
     }
 
     /**
