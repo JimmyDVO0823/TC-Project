@@ -45,7 +45,7 @@ public class Vista extends javax.swing.JFrame {
         lblAccion = new javax.swing.JLabel();
         txtInsertarTexto = new javax.swing.JTextField();
         btnAccion = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
+        btnValidar = new javax.swing.JButton();
         btnConvertir = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         scroll2 = new javax.swing.JScrollPane();
@@ -90,14 +90,15 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
-        btnGuardar.setText("Guardar");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+        btnValidar.setText("Validar");
+        btnValidar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                btnValidarActionPerformed(evt);
             }
         });
 
         btnConvertir.setText("Convertir");
+        btnConvertir.setEnabled(false);
 
         jLabel4.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
         jLabel4.setText("AFD");
@@ -123,26 +124,30 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbxAFND, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(34, 34, 34)
-                                .addComponent(lblAccion)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtInsertarTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnAccion)
-                                .addGap(73, 73, 73)
-                                .addComponent(btnGuardar)))
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel4)))
+                        .addContainerGap(50, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(btnConvertir))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(scroll2, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
-                        .addComponent(scroll1)))
-                .addGap(40, 40, 40))
+                        .addComponent(cbxAFND, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(lblAccion)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtInsertarTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAccion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnValidar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnConvertir)
+                        .addGap(50, 50, 50))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(235, 235, 235)
@@ -159,20 +164,20 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(lblAccion)
                     .addComponent(txtInsertarTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAccion)
-                    .addComponent(btnGuardar)
+                    .addComponent(btnValidar)
                     .addComponent(btnConvertir))
-                .addGap(25, 25, 25)
-                .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addGap(33, 33, 33)
+                .addComponent(scroll1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scroll2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(24, 24, 24)
                     .addComponent(jLabel2)
-                    .addContainerGap(478, Short.MAX_VALUE)))
+                    .addContainerGap(459, Short.MAX_VALUE)))
         );
 
         pack();
@@ -182,9 +187,9 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtInsertarTextoActionPerformed
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnGuardarActionPerformed
+    private void btnValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarActionPerformed
+        //
+    }//GEN-LAST:event_btnValidarActionPerformed
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
        c.realizarAccion();
@@ -199,8 +204,8 @@ public class Vista extends javax.swing.JFrame {
         return btnConvertir;
     }
 
-    public JButton getBtnGuardar() {
-        return btnGuardar;
+    public JButton getBtnValidar() {
+        return btnValidar;
     }
 
     public JTable getTblAFD() {
@@ -269,7 +274,7 @@ public class Vista extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccion;
     private javax.swing.JButton btnConvertir;
-    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnValidar;
     private javax.swing.JComboBox<String> cbxAFND;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
