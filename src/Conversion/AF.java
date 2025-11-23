@@ -38,6 +38,7 @@ public abstract class AF {
     }
     }
     
+    
     public boolean setEstadoTerminal(String estado, boolean terminal) {
     // Verifica si el estado existe dentro del mapa de transiciones
     if (transiciones.containsKey(estado)) {
@@ -49,6 +50,15 @@ public abstract class AF {
     }
     }
 
+    public ArrayList<String> getEstadosTerminales(){
+        ArrayList<String> e = new ArrayList<>();
+        for(String key: transiciones.keySet()){
+            if(transiciones.get(key).isTerminal()){
+                e.add(key);
+            }
+        }
+        return e;
+    }
     
     public Map<String, Transicion> getTransiciones() {
         return transiciones;
@@ -66,10 +76,15 @@ public abstract class AF {
         this.alfabeto.add(s);
     }
     
+    public void setAlfabeto(ArrayList<String> a){
+        this.alfabeto = a;
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        System.out.println("ola");
+        System.out.println("Imprimiendo");
+        System.out.println("ESTADO INICIAL "+estadoInicial);
         for (Map.Entry<String, Transicion> e : transiciones.entrySet()) {
             sb.append(e.getValue().toString()).append(System.lineSeparator());
         }

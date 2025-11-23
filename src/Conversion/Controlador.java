@@ -5,6 +5,8 @@
 package Conversion;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
@@ -17,7 +19,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Controlador {
 
+    private ArrayList<String> estadosTerminales = new ArrayList<>();
+    private String estadoInicial = "";
     private AFND afnd;
+    private AFD afd;
     private Vista vista;
     private DefaultTableModel modelo;
 
@@ -32,17 +37,19 @@ public class Controlador {
         modelo = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // SOLO SE MODIFICA SI NO ES LA COLUMNA ESTADOS
-                return (column != 0);
+                return (column != 0); // SOLO SE MODIFICA SI NO ES LA COLUMNA ESTADOS
             }
         };
-
+        
+        
+        
+        vista.getTblAFD().setModel(new DefaultTableModel());
         vista.getTblAFND().setModel(modelo);
         vista.getTblAFND().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         vista.getTblAFND().getTableHeader().setReorderingAllowed(false);
 
         String[] opciones = {"Agregar estado", "Eliminar estado",
-            "Agregar letra", "Eliminar letra"};
+            "Agregar letra", "Eliminar letra", "Elegir estado inicial", "Elegir estado terminal"};
         DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>(opciones);
         vista.getCbxAFND().setModel(comboModel);
 
@@ -132,12 +139,14 @@ public class Controlador {
         String[] newCols = excluirNombreColumnas(colIndex, oldCols);
         DefaultTableModel nuevoModelo = new DefaultTableModel(newCols, 0);
         for (int r = 0; r < rows; r++) {
-            String[] nuevaFila = new String[oldCols - 1];
+            String[] nuevaFila = new String[newCols.length];
+            int count = 0;
             for (int c = 0; c < oldCols; c++) {
                 if (c == colIndex) {
                     continue;
                 }
-                nuevaFila[c] = (String) modelo.getValueAt(r, c);
+                nuevaFila[count] = (String) modelo.getValueAt(r, c);
+                count++;
             }
             nuevoModelo.addRow(nuevaFila);
         }
@@ -150,11 +159,13 @@ public class Controlador {
 
     public String[] excluirNombreColumnas(int excluir, int size) {
         String[] newCols = new String[size - 1]; // Excluir una fila
+        int count = 0;
         for (int c = 0; c < size; c++) {
             if (c == excluir) {
                 continue; // Evitar fila
             }
-            newCols[c] = (modelo.getColumnName(c));
+            newCols[count] = ((String) modelo.getColumnName(c));
+            count++;
         }
         return newCols;
     }
@@ -173,6 +184,7 @@ public class Controlador {
     }
 
     public boolean realizarAccion() {
+        vista.getBtnConvertir().setEnabled(false);
         String opcion = (String) vista.getCbxAFND().getSelectedItem();
         if (opcion == null) {
             return false;
@@ -186,6 +198,10 @@ public class Controlador {
             addLetra(texto);
         } else if (opcion.equals("Eliminar letra")) {
             deleteLetra(texto);
+        } else if (opcion.equals("Elegir estado inicial")) {
+            setEstadoInicial(texto, vista.getTblAFND());
+        } else if (opcion.equals("Elegir estado terminal")) {
+            setEstadoTerminal(texto, vista.getTblAFND());
         } else {
             return false;
         }
@@ -193,47 +209,170 @@ public class Controlador {
         return true;
     }
 
-    public boolean validar() {
-        this.afnd = new AFND();
-        ArrayList<String> rows = nombrarEstados();
-        ArrayList<String> cols = nombrarColumnas();
+    public boolean setEstadoInicial(String input, JTable tabla) {
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
 
-        
-        
+        if (!estadoInicial.equals("")) {
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String valor = model.getValueAt(i, 0).toString();
+                if (valor.startsWith("->")) {
+                    model.setValueAt(valor.substring(2), i, 0);     // quitar "->"
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String valor = model.getValueAt(i, 0).toString();
+            if (valor.equals(input)) {
+                model.setValueAt("->" + valor, i, 0);   // poner "->" al inicio
+                estadoInicial = input;                 // actualizar variable clase
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean setEstadoTerminal(ArrayList<String> input, JTable tabla){
+        for(String s: input){
+            setEstadoTerminal(s, tabla);
+        }
+        return true;
     }
     
-    
-    
-    
+    public boolean setEstadoTerminal(String input, JTable tabla) {
+        if (input == null) {
+            return false;
+        }
+
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        int filas = model.getRowCount();
+
+        for (int i = 0; i < filas; i++) {
+            Object o = model.getValueAt(i, 0);
+            String celda = o != null ? o.toString() : "";
+
+            // Si la fila está marcada por marcarFila (prefijo "->") no la toques
+            if (celda.startsWith("->")) {
+                continue;
+            }
+
+            String raw = rawContent(celda);
+
+            if (raw.equals(input)) {
+                // determinar si ya está marcada con [ ... ]
+                boolean estaMarcada = celda.startsWith("[") && celda.endsWith("]");
+
+                if (estaMarcada) {
+                    // desmarcar: quitar corchetes
+                    model.setValueAt(raw, i, 0);
+                    // quitar de la lista si estaba
+                    estadosTerminales.remove(raw);
+                } else {
+                    // marcar: encerrar entre corchetes
+                    String marcado = "[" + raw + "]";
+                    model.setValueAt(marcado, i, 0);
+                    // añadir a la lista si no estaba ya (evitar duplicados)
+                    if (!estadosTerminales.contains(raw)) {
+                        estadosTerminales.add(raw);
+                    }
+                }
+                return true; // procesamos solo la primera coincidencia
+            }
+        }
+        return false;
+    }
+
+    private String rawContent(String cellText) {
+        if (cellText == null) {
+            return "";
+        }
+        String s = cellText;
+        if (s.startsWith("->")) {
+            s = s.substring(2);
+        }
+        if (s.startsWith("[") && s.endsWith("]") && s.length() >= 2) {
+            s = s.substring(1, s.length() - 1);
+        }
+        return s.trim();
+    }
+
+    public boolean validar() {
+        this.afnd = new AFND();
+        this.afnd.setAlfabeto(nombrarColumnas());
+        TreeMap<String, ArrayList<String>> t = obtenerTransiciones();
+        for (String clave : t.keySet()) {
+            ArrayList<String> valores = t.get(clave);
+            for (int i = 0; i < afnd.getAlfabeto().size(); i++) {
+                //System.out.println(clave+" "+afnd.getAlfabeto().get(i)+" "+valores.get(i));
+                this.afnd.insertTransicion(clave, afnd.getAlfabeto().get(i), valores.get(i));
+            }
+        }
+        this.afnd.setEstadoInicial(estadoInicial);
+        for(String s:estadosTerminales) afnd.setEstadoTerminal(s, true);
+        this.afd = afnd.conversionAFD();
+        vista.getBtnConvertir().setEnabled(true);
+        return true;
+    }
+
+    public boolean llenarTablaAFD() {
+        ArrayList<String> fila = new ArrayList<>();
+        ArrayList<String> filaInicial = new ArrayList<>();
+        filaInicial.add("Estados");
+        filaInicial.addAll(afd.getAlfabeto());
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(filaInicial.toArray());
+
+        for (String key : afd.getTransiciones().keySet()) {
+            fila.add(key);
+            Map<String, ArrayList<String>> t = afd.getTransiciones().get(key).getTransiciones();
+            for (String key2 : t.keySet()) {
+                String s = t.get(key2).toString();
+                s = s.replaceAll("\\[", "");
+                s = s.replaceAll("\\]", "");
+                fila.add(s);
+            }
+            model.addRow(fila.toArray());
+            fila = new ArrayList<>();
+        }
+        vista.getTblAFD().setModel(model);
+        setEstadoInicial(estadoInicial ,vista.getTblAFD());
+        System.out.println(afd.getEstadosTerminales());
+        setEstadoTerminal(afd.getEstadosTerminales(), vista.getTblAFD());
+        return true;
+    }
+
     public ArrayList<String> nombrarColumnas() {
         ArrayList<String> cols = new ArrayList<>();
         int n = modelo.getColumnCount();
-        for (int c = 0; c < n; c++) {
+        for (int c = 1; c < n; c++) {
             cols.add(modelo.getColumnName(c));
-            System.out.println(modelo.getColumnName(c));
+            //System.out.println(modelo.getColumnName(c));
         }
         return cols;
     }
-    
-    public  ArrayList<String> nombrarEstados() {
-        ArrayList<String> rows = new ArrayList<>();
-        int n = modelo.getRowCount();
-        for (int c = 0; c < n; c++) {
-            rows.add(modelo.getColumnName(c));
-            System.out.println(modelo.getColumnName(c));
-        }
-        
-        for (int r = 0; r < n; r++) {
-            String[] nuevaFila = new String[oldCols - 1];
-            for (int c = 0; c < oldCols; c++) {
-                if (c == colIndex) {
-                    continue;
-                }
-                nuevaFila[c] = (String) modelo.getValueAt(r, c);
+
+    public TreeMap<String, ArrayList<String>> obtenerTransiciones() {
+        TreeMap<String, ArrayList<String>> mapa = new TreeMap<>();
+
+        int filas = vista.getTblAFND().getRowCount();
+        int columnas = vista.getTblAFND().getColumnCount();
+
+        for (int i = 0; i < filas; i++) {
+            // Clave = primera columna
+            String clave = rawContent(vista.getTblAFND().getValueAt(i, 0).toString());
+            // Valor = resto de columnas en un ArrayList
+            ArrayList<String> valores = new ArrayList<>();
+
+            for (int j = 1; j < columnas; j++) {
+                Object valor = vista.getTblAFND().getValueAt(i, j);
+                valores.add(valor != null ? valor.toString() : "");
             }
-            nuevoModelo.addRow(nuevaFila);
+            mapa.put(clave, valores);
         }
-        return rows;
+
+        return mapa;
     }
 
+    // String Estado, ArrayList <String>
 }

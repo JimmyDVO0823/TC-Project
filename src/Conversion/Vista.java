@@ -1,5 +1,6 @@
 package Conversion;
 
+import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -10,7 +11,6 @@ import javax.swing.JTextField;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Kevin
@@ -20,9 +20,8 @@ public class Vista extends javax.swing.JFrame {
     /**
      * Creates new form Vista
      */
-    
     private Controlador c;
-    
+
     public Vista() {
         initComponents();
         c = new Controlador(this);
@@ -82,6 +81,11 @@ public class Vista extends javax.swing.JFrame {
                 txtInsertarTextoActionPerformed(evt);
             }
         });
+        txtInsertarTexto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtInsertarTextoKeyPressed(evt);
+            }
+        });
 
         btnAccion.setText(">");
         btnAccion.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +103,11 @@ public class Vista extends javax.swing.JFrame {
 
         btnConvertir.setText("Convertir");
         btnConvertir.setEnabled(false);
+        btnConvertir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConvertirActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
         jLabel4.setText("AFD");
@@ -188,14 +197,25 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_txtInsertarTextoActionPerformed
 
     private void btnValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarActionPerformed
-        //
+        c.validar();
     }//GEN-LAST:event_btnValidarActionPerformed
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
-       c.realizarAccion();
+        c.realizarAccion();
     }//GEN-LAST:event_btnAccionActionPerformed
-    
-    
+
+    private void txtInsertarTextoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInsertarTextoKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Aquí va la acción que quieres ejecutar
+            System.out.println("Presionaste ENTER");
+            btnAccion.doClick(); // opcional, simula clic del botón
+        }
+    }//GEN-LAST:event_txtInsertarTextoKeyPressed
+
+    private void btnConvertirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConvertirActionPerformed
+        c.llenarTablaAFD();
+    }//GEN-LAST:event_btnConvertirActionPerformed
+
     public JButton getBtnAccion() {
         return btnAccion;
     }
@@ -215,7 +235,7 @@ public class Vista extends javax.swing.JFrame {
     public JTextField getTxtInsertarTexto() {
         return txtInsertarTexto;
     }
-    
+
     public JTable getTblAFND() {
         return tblAFND;
     }
@@ -223,19 +243,11 @@ public class Vista extends javax.swing.JFrame {
     public JLabel getLblAccion() {
         return lblAccion;
     }
-    
-    
 
     public JComboBox<String> getCbxAFND() {
         return cbxAFND;
     }
 
-    
-    
-    
-    
-    
-    
     /**
      * @param args the command line arguments
      */

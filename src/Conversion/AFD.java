@@ -11,7 +11,7 @@ package Conversion;
  */
 public class AFD extends AF{
     public boolean insertTransicion(String estadoInicial, String letra, String estadoFinal) {
-        System.out.println("Insertar AFD "+estadoInicial+ "letra: "+letra+" destino: "+estadoFinal);
+        System.out.println("Insertar AFD "+estadoInicial+ " letra: "+letra+" destino: "+estadoFinal);
         return super.insertTransicion(estadoInicial, letra, estadoFinal, true);
     }
     

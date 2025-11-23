@@ -21,15 +21,14 @@ public class Main {
         System.out.println(afnd.insertTransicion("X", "b", "Z")); 
         System.out.println(afnd.insertTransicion("Y", "a", "W")); 
         System.out.println(afnd.insertTransicion("Y", "b", "P")); 
-        System.out.println(afnd.insertTransicion("Z", "a", "Y")); 
-        System.out.println(afnd.insertTransicion("Z", "a", "P")); 
+        System.out.println(afnd.insertTransicion("Z", "a", "Y,P")); 
         System.out.println(afnd.insertTransicion("Z", "b", "Y")); 
         System.out.println(afnd.insertTransicion("W", "a", "Y")); 
         System.out.println(afnd.insertTransicion("W", "b", "W")); 
         System.out.println(afnd.insertTransicion("P", "a", "W")); 
         System.out.println(afnd.insertTransicion("P", "b", "P")); 
         afnd.setEstadoInicial("X");
-        afnd.setEstadoTerminal("W", true);
+        afnd.setEstadoTerminal("Y", true);
         
         AFD afd = afnd.conversionAFD();
         
