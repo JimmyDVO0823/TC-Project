@@ -22,6 +22,29 @@ public class Termino {
         this.signo = signo;
         this.producto = producto;
         this.division = division;
+        arreglarTermino();
+    }
+    
+    public final void arreglarTermino(){
+        if(esNumerico(valor) && esNumerico(valor2)){
+            if(producto) {
+                valor = String.valueOf(Integer.parseInt(valor)*Integer.parseInt(valor2));
+            } else {
+                valor = String.valueOf(Integer.parseInt(valor)*Integer.parseInt(valor2));
+            }
+            valor2 = "";
+            producto = false;
+            division = false;
+        }
+    }
+    
+    public boolean esNumerico(String s) {
+        try {
+            Integer.valueOf(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public String getValor() {

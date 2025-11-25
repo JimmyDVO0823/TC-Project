@@ -14,12 +14,24 @@ import java.util.TreeMap;
 public class Estado {
     String nombre;
     TreeMap<Conexion, Estado> conexiones = new TreeMap<>();
+    boolean terminal = false;
     
     public Estado(String nombre){
-        
+        this.nombre = nombre;
     }
     
-    public void agregarEstado(Estado estado, String letra, String pop, ArrayList<String> push){
+    public Estado agregarEstado(Estado estado, String letra, String pop, ArrayList<String> push){
         conexiones.put(new Conexion(letra, pop, push, this, estado), estado);
+        return estado;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        for(Conexion s: conexiones.keySet()){
+            sb.append(nombre).append(" ");sb.append(s.toString()).append(" | ");
+        }
+        return sb.toString();
     }
 }
