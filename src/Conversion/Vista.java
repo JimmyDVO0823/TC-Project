@@ -7,21 +7,38 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 /**
- *
+ * Interfaz gráfica para la conversión de AFND a AFD.
+ * Proporciona tablas para mostrar el AFND y el AFD, campos de texto
+ * y botones para agregar/eliminar estados y letras, así como
+ * para validar y convertir el autómata.
+ * 
+ * La clase delega la lógica de operación al {@link Controlador} asociado.
+ * La mayor parte de la interfaz fue generada por NetBeans GUI Builder.
+ * 
+ * Componentes accesibles públicamente mediante getters:
+ * - Botones: btnAccion, btnConvertir, btnValidar
+ * - Tablas: tblAFND, tblAFD
+ * - Campo de texto: txtInsertarTexto
+ * - Etiqueta de acción: lblAccion
+ * - ComboBox de acciones: cbxAFND
+ * 
+ * Uso:
+ * 1. Crear la instancia de Vista.
+ * 2. Interactuar con los componentes; las acciones son delegadas al controlador.
+ * 3. Mostrar la ventana mediante `setVisible(true)`.
+ * 
  * @author Kevin
  */
 public class Vista extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Vista
-     */
+    
     private Controlador c;
-
+    /**
+ * Crea la ventana principal de la aplicación e inicializa
+ * todos los componentes gráficos.
+ * También crea e inicializa el {@link Controlador} asociado.
+ */
     public Vista() {
         initComponents();
         c = new Controlador(this);
@@ -76,11 +93,6 @@ public class Vista extends javax.swing.JFrame {
 
         lblAccion.setText("Agregar Estado:");
 
-        txtInsertarTexto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtInsertarTextoActionPerformed(evt);
-            }
-        });
         txtInsertarTexto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtInsertarTextoKeyPressed(evt);
@@ -191,19 +203,22 @@ public class Vista extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtInsertarTextoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtInsertarTextoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtInsertarTextoActionPerformed
-
+/**
+ * Evento del botón Validar: delega la acción al controlador.
+ */
     private void btnValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarActionPerformed
-        c.validar();
+        c.validarAFND();
     }//GEN-LAST:event_btnValidarActionPerformed
+/**
+ * Evento del botón Accion: delega la acción al controlador.
+ */
 
     private void btnAccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccionActionPerformed
         c.realizarAccion();
     }//GEN-LAST:event_btnAccionActionPerformed
-
+    /**
+ * Evento de presionar Enter en el campo de texto: simula clic en btnAccion.
+ */
     private void txtInsertarTextoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInsertarTextoKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             // Aquí va la acción que quieres ejecutar
@@ -212,6 +227,9 @@ public class Vista extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtInsertarTextoKeyPressed
 
+    /**
+ * Evento del botón Convertir: llena la tabla AFD usando el controlador.
+ */
     private void btnConvertirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConvertirActionPerformed
         c.llenarTablaAFD();
     }//GEN-LAST:event_btnConvertirActionPerformed
